@@ -147,10 +147,7 @@ def client():
         client_id=gen_salt(40),
         client_secret=gen_salt(50),
         _redirect_uris=' '.join([
-            'http://localhost:8000/authorized',
-            'http://127.0.0.1:8000/authorized',
-            'http://127.0.1:8000/authorized',
-            'http://127.1:8000/authorized',
+            'http://0.0.0.0:8001/authorized'
             ]),
         _default_scopes='email',
         user_id=user.id,
@@ -238,6 +235,7 @@ def authorize(*args, **kwargs):
     if not user:
         return redirect('/')
     if request.method == 'GET':
+        print kwargs
         client_id = kwargs.get('client_id')
         client = Client.query.filter_by(client_id=client_id).first()
         kwargs['client'] = client
@@ -257,4 +255,4 @@ def me():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run()
+    app.run(host='0.0.0.0')
